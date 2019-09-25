@@ -65,7 +65,7 @@ async def analyze(request):
     probas = {cl:predictions[2].numpy()[i] for i,cl in enumerate(classes)}
     message = "Category = "+str(category)+", Probas = "+str(probas)
     # prediction = learn.predict(img)#[0]
-    return JSONResponse({'result': message)})
+    return JSONResponse({'result': message})
 
 
 if __name__ == '__main__':
