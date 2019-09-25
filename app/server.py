@@ -12,7 +12,7 @@ from starlette.staticfiles import StaticFiles
 export_file_url = 'https://drive.google.com/uc?export=download&id=1hXFq4WqbWdsF8HA79xaI045VPwMxAhnb'
 export_file_name = 'export.pkl'
 
-classes = ['Barilla', 'Panzani', 'Bjorg', 'Gerble']
+classes = ['Barilla', 'Bjorg', 'Gerble', 'Panzani']
 path = Path(__file__).parent
 
 app = Starlette()
@@ -60,8 +60,12 @@ async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
     img = open_image(BytesIO(img_bytes))
-    prediction = learn.predict(img)#[0]
-    return JSONResponse({'result': str(prediction)})
+    predictions = learn.predict(img)
+    category = predictions[0]
+    probas = {cl:predictions[2].numpy()[i] for i,cl in enumerate(classes)}
+    message = "Category = "+str(category)+", Probas = "+str(probas)
+    # prediction = learn.predict(img)#[0]
+    return JSONResponse({'result': message)})
 
 
 if __name__ == '__main__':
